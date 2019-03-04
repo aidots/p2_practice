@@ -162,14 +162,14 @@ var Main = (function (_super) {
         // this.world.sleepMode = p2.World.BODY_SLEEPING
         this.world.sleepMode = p2.World.NO_SLEEPING;
         // this.world.gravity = [0, 1]
-        this.world.gravity = [0, 0];
+        this.world.gravity = [0, 1];
     };
     Main.prototype.CreatePlanes = function () {
         //注意，角度是按逆时针来算的。原始方向是正y方向。
         //Ground Plane
         var planeShape_ground = new p2.Plane();
         this.planeBody_ground = new p2.Body({
-            // type: p2.Body.KINEMATIC,
+            type: p2.Body.KINEMATIC,
             position: [0, this.stage.stageHeight]
         });
         this.planeBody_ground.angle = Math.PI; //正y到负y，180度
@@ -179,7 +179,7 @@ var Main = (function (_super) {
         //Left Plane
         var planeShape_left = new p2.Plane();
         this.planeBody_left = new p2.Body({
-            // type: p2.Body.KINEMATIC,
+            type: p2.Body.STATIC,
             position: [0, 0]
         });
         this.planeBody_left.angle = -Math.PI / 2; // 从正y到正x旋转，所以是负90度
@@ -189,7 +189,7 @@ var Main = (function (_super) {
         //Right Plane
         var planeShape_right = new p2.Plane();
         this.planeBody_right = new p2.Body({
-            // type: p2.Body.KINEMATIC,
+            type: p2.Body.STATIC,
             position: [this.stage.stageWidth, 0]
         });
         this.planeBody_right.angle = Math.PI / 2; //正y到负x，正90度
@@ -199,7 +199,7 @@ var Main = (function (_super) {
         //TOP Plane
         var planeShape_top = new p2.Plane();
         this.planeBody_top = new p2.Body({
-            // type: p2.Body.KINEMATIC,
+            type: p2.Body.STATIC,
             position: [0, 0]
         });
         this.planeBody_top.angle = 0; //正y不变，0度
@@ -216,7 +216,7 @@ var Main = (function (_super) {
             mass: 1,
             position: [100, 100],
             angle: -Math.PI / 4,
-            velocity: [50, 50]
+            velocity: [0, 0]
         });
         this.shapeBody.addShape(circleShape);
         this.world.addBody(this.shapeBody);
