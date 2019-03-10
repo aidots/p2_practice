@@ -141,11 +141,11 @@ var Main = (function (_super) {
         img.width = this.stage.stageWidth;
         img.height = this.stage.stageHeight;
         this.addChild(img);
-        this.CreateWorld();
-        this.CreatePlanes();
-        this.CreateBall();
+        this.createWorld();
+        this.createPlanes();
+        //this.createBall()
         this.addEventListener(egret.Event.ENTER_FRAME, this.update, this);
-        //this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onButtonClick, this)
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onButtonClick, this);
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -157,14 +157,28 @@ var Main = (function (_super) {
         result.texture = texture;
         return result;
     };
-    Main.prototype.CreateWorld = function () {
+    Main.prototype.createWorld = function () {
         this.world = new p2.World();
-        // this.world.sleepMode = p2.World.BODY_SLEEPING
-        this.world.sleepMode = p2.World.NO_SLEEPING;
-        // this.world.gravity = [0, 1]
+        this.world.sleepMode = p2.World.BODY_SLEEPING;
         this.world.gravity = [0, 1];
     };
-    Main.prototype.CreatePlanes = function () {
+    Main.prototype.createGround = function () {
+        var stageHeight = egret.MainContext.instance.stage.stageHeight;
+        var groundShape = new p2.Plane();
+        var groundBody = new p2.Body();
+        groundBody.position[1] = stageHeight - 100;
+        groundBody.addShape(groundShape);
+        this.world.addBody(groundBody);
+    };
+    Main.prototype.createRectangle = function () {
+        var stageHeight = egret.MainContext.instance.stage.stageHeight;
+        var rectShape = new p2.Box();
+        var rectBody = new p2.Body();
+        rectBody.position[1] = stageHeight - 100;
+        rectBody.addShape(rectShape);
+        this.world.addBody(rectBody);
+    };
+    Main.prototype.createPlanes = function () {
         //注意，角度是按逆时针来算的。原始方向是正y方向。
         //Ground Plane
         var planeShape_ground = new p2.Plane();
@@ -210,7 +224,7 @@ var Main = (function (_super) {
     /**
      * 想弄一个小球，无阻力的在四周碰撞。目前还没有搞定，总是有阻力。
      */
-    Main.prototype.CreateBall = function () {
+    Main.prototype.createBall = function () {
         var circleShape = new p2.Circle({ radius: 60 });
         this.shapeBody = new p2.Body({
             mass: 1,

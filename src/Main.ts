@@ -82,13 +82,13 @@ class Main extends eui.UILayer {
         img.width = this.stage.stageWidth
         img.height = this.stage.stageHeight
         this.addChild(img)
-        this.CreateWorld()
-        this.CreatePlanes()
-        this.CreateBall()
+        this.createWorld()
+        this.createPlanes()
+        //this.createBall()
         
 
         this.addEventListener(egret.Event.ENTER_FRAME, this.update, this)
-        //this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onButtonClick, this)
+        this.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onButtonClick, this)
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
@@ -101,16 +101,30 @@ class Main extends eui.UILayer {
         return result;
     }
 
-    private CreateWorld() {
-        this.world = new p2.World()
-        // this.world.sleepMode = p2.World.BODY_SLEEPING
-        this.world.sleepMode = p2.World.NO_SLEEPING
-
-        // this.world.gravity = [0, 1]
-        this.world.gravity = [0, 1]
+    private createWorld() {
+        this.world = new p2.World();
+        this.world.sleepMode = p2.World.BODY_SLEEPING;
+        this.world.gravity = [0, 1];
     }
 
-    private CreatePlanes() {
+    private createGround() {
+        let stageHeight:number = egret.MainContext.instance.stage.stageHeight;
+        let groundShape:p2.Plane=new p2.Plane();
+        let groundBody:p2.Body=new p2.Body();
+        groundBody.position[1]=stageHeight-100;
+        groundBody.addShape(groundShape);
+        this.world.addBody(groundBody);
+    }
+
+    private createRectangle() {
+        let stageHeight:number = egret.MainContext.instance.stage.stageHeight;
+        let rectShape:p2.Shape=new p2.Box();
+        let rectBody:p2.Body=new p2.Body();
+        rectBody.position[1]=stageHeight-100;
+        rectBody.addShape(rectShape);
+        this.world.addBody(rectBody);
+    }
+    private createPlanes() {
         //注意，角度是按逆时针来算的。原始方向是正y方向。
         //Ground Plane
         let planeShape_ground: p2.Plane = new p2.Plane()
@@ -160,7 +174,7 @@ class Main extends eui.UILayer {
     /**
      * 想弄一个小球，无阻力的在四周碰撞。目前还没有搞定，总是有阻力。
      */
-    private CreateBall() {
+    private createBall() {
         let circleShape: p2.Shape = new p2.Circle({ radius: 60 })
         this.shapeBody = new p2.Body({ 
             mass: 1, 
